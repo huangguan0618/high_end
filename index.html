@@ -2,66 +2,189 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <!-- 确保手机端显示正常 -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>⚠️ High-Class Area</title>
+    <title>🔒 ACCESS RESTRICTED</title>
     <style>
+        /* --- 赛博朋克基础设置 --- */
         body {
-            background-color: #000000; /* 纯黑背景 */
-            color: #b22222; /* 圣诞红字体 */
-            font-family: 'Courier New', Courier, monospace; /* 极客字体 */
+            background-color: #050505;
+            color: #ff3838; /* 赛博红 */
+            font-family: 'Courier New', Courier, monospace;
+            margin: 0;
+            height: 100vh;
             display: flex;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
-            height: 100vh;
-            margin: 0;
+            justify-content: center;
             overflow: hidden;
+            text-shadow: 0 0 5px #ff3838, 0 0 10px #8b0000; /* 霓虹发光 */
         }
+
+        /* --- CRT 扫描线特效 (灵魂所在) --- */
+        body::before {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 2;
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
+        }
+
         .container {
-            text-align: center;
+            position: relative;
+            z-index: 1;
             width: 90%;
+            max-width: 500px;
+            text-align: center;
         }
-        h1 {
-            font-size: 1.5rem;
+
+        /* --- 打字机文字 --- */
+        #typing-text {
+            font-size: 1rem;
+            line-height: 1.5;
+            min-height: 60px; /* 防止高度跳动 */
             margin-bottom: 20px;
-            border-bottom: 2px solid #b22222;
-            display: inline-block;
-            padding-bottom: 10px;
+            font-weight: bold;
         }
-        p {
-            color: #fff;
-            font-size: 0.8rem;
-            margin-bottom: 30px;
+
+        /* --- 视频容器 --- */
+        .video-wrapper {
+            position: relative;
+            border: 2px solid #ff3838;
+            padding: 5px;
+            box-shadow: 0 0 20px rgba(255, 56, 56, 0.4);
+            background: rgba(20, 0, 0, 0.8);
+            transform: scale(0.95);
+            opacity: 0; /* 初始隐藏，等文字打完再显示 */
+            animation: turn-on 0.5s ease-out forwards;
+            animation-delay: 2.5s; /* 延迟显示 */
         }
+
         video {
             width: 100%;
-            max-width: 400px; /* 限制最大宽度 */
-            border: 2px solid #333;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(178, 34, 34, 0.5); /* 红色发光特效 */
+            display: block;
+            opacity: 0.9;
         }
-        .footer {
-            margin-top: 30px;
+
+        /* --- 装饰性边框 --- */
+        .video-wrapper::after {
+            content: "SECURE CONNECTION ESTABLISHED";
+            position: absolute;
+            bottom: -25px;
+            right: 0;
             font-size: 0.6rem;
-            color: #555;
+            color: #ff3838;
+            letter-spacing: 2px;
         }
+
+        .loader {
+            border: 2px solid #ff3838;
+            width: 100%;
+            height: 5px;
+            margin-top: 20px;
+            position: relative;
+            display: none;
+        }
+        .loader-bar {
+            background: #ff3838;
+            height: 100%;
+            width: 0%;
+            box-shadow: 0 0 10px #ff3838;
+            animation: load 2s linear forwards;
+        }
+
+        /* --- 动画定义 --- */
+        @keyframes turn-on {
+            0% { transform: scale(0.1) skew(20deg); opacity: 0; }
+            60% { transform: scale(1.02) skew(0deg); opacity: 1; }
+            100% { transform: scale(1) skew(0deg); opacity: 1; }
+        }
+        
+        @keyframes load {
+            0% { width: 0%; }
+            100% { width: 100%; }
+        }
+
+        /* 闪烁光标 */
+        .cursor {
+            display: inline-block;
+            width: 10px;
+            height: 15px;
+            background: #ff3838;
+            animation: blink 1s infinite;
+        }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
     </style>
 </head>
 <body>
+
     <div class="container">
-        <h1>⚠️ 警告 ⚠️</h1>
-        <p>检测到非高雅人士入侵<br>System Loading...</p>
+        <!-- 打字机区域 -->
+        <div id="typing-text"></div>
         
-        <!-- 核心：你的企鹅视频 -->
-        <!-- playsinline 保证在 iOS 上不全屏播放 -->
-        <!-- autoplay muted 保证自动播放（浏览器策略要求静音才能自动播，或者让她自己点） -->
-        <video src="high-end.mp4" controls autoplay loop playsinline></video>
-        
-        <div class="footer">
-            Project: Merry Christmas<br>
-            Code by: Your Cyber Neighbor
+        <!-- Loader -->
+        <div class="loader" id="loader"><div class="loader-bar"></div></div>
+
+        <!-- video -->
+        <div class="video-wrapper" id="video-box">
+            <video src="high-end.mp4" autoplay loop playsinline controls></video>
         </div>
     </div>
+
+    <script>
+        const texts = [
+            "Initializing Christmas Protocol...",
+            "Verifying High-Class Identity...",
+            "Access Granted.",
+            "Merry Christmas."
+        ];
+
+        const textElement = document.getElementById('typing-text');
+        const videoBox = document.getElementById('video-box');
+        const loader = document.getElementById('loader');
+        
+        let lineIndex = 0;
+        let charIndex = 0;
+        let currentText = "";
+
+        // 打字机逻辑
+        function typeWriter() {
+            if (lineIndex < texts.length) {
+                if (charIndex < texts[lineIndex].length) {
+                    currentText += texts[lineIndex].charAt(charIndex);
+                    textElement.innerHTML = currentText + '<span class="cursor"></span>';
+                    charIndex++;
+                    setTimeout(typeWriter, 50); // 打字速度
+                } else {
+                    currentText += "<br>";
+                    lineIndex++;
+                    charIndex = 0;
+                    setTimeout(typeWriter, 300); // 换行停顿
+                }
+            } else {
+                // 文字打完后
+                textElement.innerHTML = currentText; // 移除光标
+                loader.style.display = 'block'; // 显示进度条
+                
+                // 进度条跑完显示视频
+                setTimeout(() => {
+                    loader.style.display = 'none';
+                    videoBox.style.opacity = '1'; 
+                }, 2000);
+            }
+        }
+
+        // 隐藏视频，等待脚本执行
+        videoBox.style.opacity = '0';
+        
+        // 开始执行
+        window.onload = typeWriter;
+    </script>
 </body>
 </html>
